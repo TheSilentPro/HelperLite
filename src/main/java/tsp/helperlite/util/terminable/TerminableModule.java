@@ -23,27 +23,30 @@
  *  SOFTWARE.
  */
 
-package tsp.helperlite.util;
+package tsp.helperlite.util.terminable;
+
+import javax.annotation.Nonnull;
 
 /**
- * Represents a class which delegates calls to a different object.
- *
- * @param <T> the delegate type
+ * A terminable module is a class which manipulates and constructs a number
+ * of {@link Terminable}s.
  */
-public interface Delegate<T> {
-
-    static Object resolve(Object obj) {
-        while (obj instanceof Delegate<?> delegate) { // @HelperLite - instanceof pattern
-            obj = delegate.getDelegate();
-        }
-        return obj;
-    }
+public interface TerminableModule {
 
     /**
-     * Gets the delegate object
+     * Performs the tasks to setup this module
      *
-     * @return the delegate object
+     * @param consumer the terminable consumer
      */
-    T getDelegate();
+    void setup(@Nonnull TerminableConsumer consumer);
+
+    /**
+     * Registers this terminable with a terminable consumer
+     *
+     * @param consumer the terminable consumer
+     */
+    default void bindModuleWith(@Nonnull TerminableConsumer consumer) {
+        consumer.bindModule(this);
+    }
 
 }

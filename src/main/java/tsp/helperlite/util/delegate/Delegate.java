@@ -23,44 +23,27 @@
  *  SOFTWARE.
  */
 
-package tsp.helperlite.scheduler.task;
-
-import tsp.helperlite.util.terminable.Terminable;
-
-import javax.annotation.ParametersAreNonnullByDefault;
+package tsp.helperlite.util.delegate;
 
 /**
- * Represents a scheduled repeating task
+ * Represents a class which delegates calls to a different object.
+ *
+ * @param <T> the delegate type
  */
-@ParametersAreNonnullByDefault
-public interface Task extends Terminable {
+public interface Delegate<T> {
 
-    /**
-     * Gets the number of times this task has ran. The counter is only incremented at the end of execution.
-     *
-     * @return the number of times this task has ran
-     */
-    int getTimesRan();
-
-    /**
-     * Stops the task
-     *
-     * @return true if the task wasn't already cancelled
-     */
-    boolean stop();
-
-    /**
-     * Gets the Bukkit ID for this task
-     *
-     * @return the bukkit id for this task
-     */
-    int getBukkitId();
-
-    /**
-     * {@link #stop() Stops} the task
-     */
-    @Override
-    default void close() {
-        stop();
+    static Object resolve(Object obj) {
+        while (obj instanceof Delegate<?> delegate) { // @HelperLite - instanceof pattern
+            obj = delegate.getDelegate();
+        }
+        return obj;
     }
+
+    /**
+     * Gets the delegate object
+     *
+     * @return the delegate object
+     */
+    T getDelegate();
+
 }

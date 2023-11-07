@@ -23,7 +23,7 @@
  *  SOFTWARE.
  */
 
-package tsp.helperlite.util;
+package tsp.helperlite.util.delegate;
 
 import java.util.concurrent.Callable;
 import java.util.function.*;

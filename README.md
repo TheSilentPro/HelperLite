@@ -3,13 +3,13 @@
 This is extracted from [Luckos](https://github.com/lucko) [helper project.](https://github.com/lucko/helper)
 
 ### Features
+Commands <br>
 Schedulers <br>
 Promise
 
 ### Required Features
-*The following features are required for the above to work* <br>
-Terminables <br>
-Delegates
+Several utility classes are required in order for some features to work. <br>
+Therefor they are also included under the `utils` package.
 
 ### Usage
 All you have to do is call `HelperLite.init(plugin)` in your main plugin class before anything.

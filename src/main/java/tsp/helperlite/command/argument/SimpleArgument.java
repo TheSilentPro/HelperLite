@@ -23,38 +23,38 @@
  *  SOFTWARE.
  */
 
-package tsp.helperlite.util;
+package tsp.helperlite.command.argument;
+
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-/**
- * Accepts {@link AutoCloseable}s (and by inheritance {@link Terminable}s),
- * as well as {@link TerminableModule}s.
- */
-@FunctionalInterface
-public interface TerminableConsumer {
+@ParametersAreNonnullByDefault
+public class SimpleArgument implements Argument {
+    protected final int index;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    protected final Optional<String> value;
 
-    /**
-     * Binds with the given terminable.
-     *
-     * @param terminable the terminable to bind with
-     * @param <T> the terminable type
-     * @return the same terminable
-     */
-    @Nonnull
-    <T extends AutoCloseable> T bind(@Nonnull T terminable);
-
-    /**
-     * Binds with the given terminable module.
-     *
-     * @param module the module to bind with
-     * @param <T> the module type
-     * @return the same module
-     */
-    @Nonnull
-    default <T extends TerminableModule> T bindModule(@Nonnull T module) {
-        module.setup(this);
-        return module;
+    public SimpleArgument(int index, @Nullable String value) {
+        this.index = index;
+        this.value = Optional.ofNullable(value);
     }
 
+    @Override
+    public int index() {
+        return this.index;
+    }
+
+    @Nonnull
+    @Override
+    public Optional<String> value() {
+        return this.value;
+    }
+
+    @Override
+    public boolean isPresent() {
+        return this.value.isPresent();
+    }
 }

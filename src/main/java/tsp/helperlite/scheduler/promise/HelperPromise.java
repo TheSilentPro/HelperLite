@@ -33,7 +33,7 @@ import tsp.helperlite.HelperLite;
 import tsp.helperlite.scheduler.HelperExecutors;
 import tsp.helperlite.scheduler.ThreadContext;
 import tsp.helperlite.scheduler.task.Ticks;
-import tsp.helperlite.util.Delegate;
+import tsp.helperlite.util.delegate.Delegate;
 import tsp.helperlite.util.HelperExceptions;
 
 import javax.annotation.Nonnull;

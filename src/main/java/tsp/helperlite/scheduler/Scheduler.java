@@ -2,7 +2,7 @@ package tsp.helperlite.scheduler;
 
 import tsp.helperlite.scheduler.promise.Promise;
 import tsp.helperlite.scheduler.task.Task;
-import tsp.helperlite.util.Delegates;
+import tsp.helperlite.util.delegate.Delegates;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;

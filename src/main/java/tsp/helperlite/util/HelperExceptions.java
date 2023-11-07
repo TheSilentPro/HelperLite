@@ -26,6 +26,8 @@
 package tsp.helperlite.util;
 
 
+import tsp.helperlite.util.delegate.Delegate;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**

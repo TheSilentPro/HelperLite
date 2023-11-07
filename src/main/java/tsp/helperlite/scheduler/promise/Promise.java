@@ -26,8 +26,8 @@
 package tsp.helperlite.scheduler.promise;
 
 import tsp.helperlite.scheduler.ThreadContext;
-import tsp.helperlite.util.Delegates;
-import tsp.helperlite.util.Terminable;
+import tsp.helperlite.util.delegate.Delegates;
+import tsp.helperlite.util.terminable.Terminable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

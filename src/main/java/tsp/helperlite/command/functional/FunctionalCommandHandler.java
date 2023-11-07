@@ -23,44 +23,28 @@
  *  SOFTWARE.
  */
 
-package tsp.helperlite.scheduler.task;
+package tsp.helperlite.command.functional;
 
-import tsp.helperlite.util.terminable.Terminable;
+import org.bukkit.command.CommandSender;
+import tsp.helperlite.command.CommandInterruptException;
+import tsp.helperlite.command.context.CommandContext;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Represents a scheduled repeating task
+ * Represents a handler for a {@link tsp.helperlite.command.Command}
+ *
+ * @param <T> the sender type
  */
+@FunctionalInterface
 @ParametersAreNonnullByDefault
-public interface Task extends Terminable {
+public interface FunctionalCommandHandler<T extends CommandSender>  {
 
     /**
-     * Gets the number of times this task has ran. The counter is only incremented at the end of execution.
+     * Executes the handler using the given command context
      *
-     * @return the number of times this task has ran
+     * @param c the command context
      */
-    int getTimesRan();
+    void handle(CommandContext<T> c) throws CommandInterruptException;
 
-    /**
-     * Stops the task
-     *
-     * @return true if the task wasn't already cancelled
-     */
-    boolean stop();
-
-    /**
-     * Gets the Bukkit ID for this task
-     *
-     * @return the bukkit id for this task
-     */
-    int getBukkitId();
-
-    /**
-     * {@link #stop() Stops} the task
-     */
-    @Override
-    default void close() {
-        stop();
-    }
 }

@@ -27,7 +27,7 @@ package tsp.helperlite.scheduler.threadlock;
 
 
 import tsp.helperlite.scheduler.ThreadContext;
-import tsp.helperlite.util.Terminable;
+import tsp.helperlite.util.terminable.Terminable;
 
 /**
  * A tool to synchronize code with the main server thread

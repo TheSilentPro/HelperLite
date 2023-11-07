@@ -23,44 +23,38 @@
  *  SOFTWARE.
  */
 
-package tsp.helperlite.scheduler.task;
+package tsp.helperlite.util.terminable;
 
-import tsp.helperlite.util.terminable.Terminable;
-
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nonnull;
 
 /**
- * Represents a scheduled repeating task
+ * Accepts {@link AutoCloseable}s (and by inheritance {@link Terminable}s),
+ * as well as {@link TerminableModule}s.
  */
-@ParametersAreNonnullByDefault
-public interface Task extends Terminable {
+@FunctionalInterface
+public interface TerminableConsumer {
 
     /**
-     * Gets the number of times this task has ran. The counter is only incremented at the end of execution.
+     * Binds with the given terminable.
      *
-     * @return the number of times this task has ran
+     * @param terminable the terminable to bind with
+     * @param <T> the terminable type
+     * @return the same terminable
      */
-    int getTimesRan();
+    @Nonnull
+    <T extends AutoCloseable> T bind(@Nonnull T terminable);
 
     /**
-     * Stops the task
+     * Binds with the given terminable module.
      *
-     * @return true if the task wasn't already cancelled
+     * @param module the module to bind with
+     * @param <T> the module type
+     * @return the same module
      */
-    boolean stop();
-
-    /**
-     * Gets the Bukkit ID for this task
-     *
-     * @return the bukkit id for this task
-     */
-    int getBukkitId();
-
-    /**
-     * {@link #stop() Stops} the task
-     */
-    @Override
-    default void close() {
-        stop();
+    @Nonnull
+    default <T extends TerminableModule> T bindModule(@Nonnull T module) {
+        module.setup(this);
+        return module;
     }
+
 }

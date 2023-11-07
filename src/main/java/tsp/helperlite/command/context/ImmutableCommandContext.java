@@ -23,66 +23,67 @@
  *  SOFTWARE.
  */
 
-package tsp.helperlite.util;
+package tsp.helperlite.command.context;
+
+import com.google.common.collect.ImmutableList;
+
+import org.bukkit.command.CommandSender;
+import tsp.helperlite.command.argument.Argument;
+import tsp.helperlite.command.argument.SimpleArgument;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
-/**
- * An extension of {@link AutoCloseable}.
- */
-@FunctionalInterface
-public interface Terminable extends AutoCloseable {
-    Terminable EMPTY = () -> {};
+public class ImmutableCommandContext<T extends CommandSender> implements CommandContext<T> {
+    private final T sender;
+    private final String label;
+    private final ImmutableList<String> args;
+    private final ImmutableList<String> aliases;
 
-    /**
-     * Closes this resource.
-     */
+    public ImmutableCommandContext(T sender, String label, String[] args, List<String> aliases) {
+        this.sender = sender;
+        this.label = label;
+        this.args = ImmutableList.copyOf(args);
+        this.aliases = ImmutableList.copyOf(aliases);
+    }
+
+    @Nonnull
     @Override
-    void close() throws Exception;
-
-    /**
-     * Gets if the object represented by this instance is already permanently closed.
-     *
-     * @return true if this terminable is closed permanently
-     */
-    default boolean isClosed() {
-        return false;
+    public T sender() {
+        return this.sender;
     }
 
-    /**
-     * Silently closes this resource, and returns the exception if one is thrown.
-     *
-     * @return the exception is one is thrown
-     */
+    @Nonnull
+    @Override
+    public ImmutableList<String> args() {
+        return this.args;
+    }
+
+    @Nonnull
+    @Override
+    public Argument arg(int index) {
+        return new SimpleArgument(index, rawArg(index));
+    }
+
     @Nullable
-    default Exception closeSilently() {
-        try {
-            close();
+    @Override
+    public String rawArg(int index) {
+        if (index < 0 || index >= this.args.size()) {
             return null;
-        } catch (Exception e) {
-            return e;
         }
+        return this.args.get(index);
     }
 
-    /**
-     * Closes this resource, and prints the exception if one is thrown.
-     */
-    default void closeAndReportException() {
-        try {
-            close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Nonnull
+    @Override
+    public String label() {
+        return this.label;
     }
 
-    /**
-     * Binds this terminable with a terminable consumer
-     *
-     * @param consumer the terminable consumer
-     */
-    default void bindWith(@Nonnull TerminableConsumer consumer) {
-        consumer.bind(this);
+    @Nonnull
+    @Override
+    public ImmutableList<String> aliases() {
+        return this.aliases;
     }
-
 }

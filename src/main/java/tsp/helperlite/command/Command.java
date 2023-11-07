@@ -23,44 +23,51 @@
  *  SOFTWARE.
  */
 
-package tsp.helperlite.scheduler.task;
+package tsp.helperlite.command;
 
+import tsp.helperlite.command.context.CommandContext;
 import tsp.helperlite.util.terminable.Terminable;
+import tsp.helperlite.util.terminable.TerminableConsumer;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
- * Represents a scheduled repeating task
+ * Represents a command
  */
-@ParametersAreNonnullByDefault
-public interface Task extends Terminable {
+public interface Command extends Terminable {
 
     /**
-     * Gets the number of times this task has ran. The counter is only incremented at the end of execution.
+     * Registers this command with the server, via the given plugin instance
      *
-     * @return the number of times this task has ran
+     * @param aliases the aliases for the command
      */
-    int getTimesRan();
+    void register(@Nonnull String... aliases);
 
     /**
-     * Stops the task
+     * Registers this command with the server, via the given plugin instance, and then binds it with the composite terminable.
      *
-     * @return true if the task wasn't already cancelled
+     * @param consumer the terminable consumer to bind with
+     * @param aliases the aliases for the command
      */
-    boolean stop();
-
-    /**
-     * Gets the Bukkit ID for this task
-     *
-     * @return the bukkit id for this task
-     */
-    int getBukkitId();
-
-    /**
-     * {@link #stop() Stops} the task
-     */
-    @Override
-    default void close() {
-        stop();
+    default void registerAndBind(@Nonnull TerminableConsumer consumer, @Nonnull String... aliases) {
+        register(aliases);
+        bindWith(consumer);
     }
+
+    /**
+     * Calls the command handler
+     *
+     * @param context the contexts for the command
+     */
+    void call(@Nonnull CommandContext<?> context) throws CommandInterruptException;
+
+    /**
+     * Calls the command tab completer
+     *
+     * @param context the contexts for the command
+     * @return a {@link List} with the completions
+     */
+    List<String> callTabCompleter(@Nonnull CommandContext<?> context) throws CommandInterruptException;
+
 }

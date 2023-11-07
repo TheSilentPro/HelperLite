@@ -23,30 +23,66 @@
  *  SOFTWARE.
  */
 
-package tsp.helperlite.util;
+package tsp.helperlite.util.terminable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
- * A terminable module is a class which manipulates and constructs a number
- * of {@link Terminable}s.
+ * An extension of {@link AutoCloseable}.
  */
-public interface TerminableModule {
+@FunctionalInterface
+public interface Terminable extends AutoCloseable {
+    Terminable EMPTY = () -> {};
 
     /**
-     * Performs the tasks to setup this module
+     * Closes this resource.
+     */
+    @Override
+    void close() throws Exception;
+
+    /**
+     * Gets if the object represented by this instance is already permanently closed.
+     *
+     * @return true if this terminable is closed permanently
+     */
+    default boolean isClosed() {
+        return false;
+    }
+
+    /**
+     * Silently closes this resource, and returns the exception if one is thrown.
+     *
+     * @return the exception is one is thrown
+     */
+    @Nullable
+    default Exception closeSilently() {
+        try {
+            close();
+            return null;
+        } catch (Exception e) {
+            return e;
+        }
+    }
+
+    /**
+     * Closes this resource, and prints the exception if one is thrown.
+     */
+    default void closeAndReportException() {
+        try {
+            close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Binds this terminable with a terminable consumer
      *
      * @param consumer the terminable consumer
      */
-    void setup(@Nonnull TerminableConsumer consumer);
-
-    /**
-     * Registers this terminable with a terminable consumer
-     *
-     * @param consumer the terminable consumer
-     */
-    default void bindModuleWith(@Nonnull TerminableConsumer consumer) {
-        consumer.bindModule(this);
+    default void bindWith(@Nonnull TerminableConsumer consumer) {
+        consumer.bind(this);
     }
 
 }
